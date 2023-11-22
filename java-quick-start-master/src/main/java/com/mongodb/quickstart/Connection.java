@@ -2,6 +2,8 @@ package com.mongodb.quickstart;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.json.JsonWriterSettings;
 
@@ -11,12 +13,12 @@ import java.util.List;
 public class Connection {
 
     public static void main(String[] args) {
-        String connectionString = System.getProperty("mongodb.uri");
-        try (MongoClient mongoClient = MongoClients.create(connectionString)) {
-            System.out.println("=> Connection successful: " + preFlightChecks(mongoClient));
-            System.out.println("=> Print list of databases:");
-            List<Document> databases = mongoClient.listDatabases().into(new ArrayList<>());
-            databases.forEach(db -> System.out.println(db.toJson()));
+       String uri = "mongodb://127.0.0.1:27017";
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            MongoDatabase database = mongoClient.getDatabase("local");
+            MongoCollection<Document> collection = database.getCollection("startup_log");
+            Document doc = collection.find();
+           System.out.println(doc)
         }
     }
 
